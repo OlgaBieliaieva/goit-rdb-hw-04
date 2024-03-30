@@ -1,0 +1,79 @@
+1. Створіть базу даних для керування бібліотекою книг згідно зі структурою, наведеною нижче. Використовуйте DDL-команди для створення необхідних таблиць та їх зв'язків.
+ 
+
+Структура БД
+
+a) Назва схеми — “LibraryManagement”
+
+b) Таблиця "authors":
+
+    author_id (INT, автоматично зростаючий PRIMARY KEY)
+    author_name (VARCHAR)
+
+c) Таблиця "genres":
+
+    genre_id (INT, автоматично зростаючий PRIMARY KEY)
+    genre_name (VARCHAR)
+
+d) Таблиця "books":
+
+    book_id (INT, автоматично зростаючий PRIMARY KEY)
+    title (VARCHAR)
+    publication_year (YEAR)
+    author_id (INT, FOREIGN KEY зв'язок з "Authors")
+    genre_id (INT, FOREIGN KEY зв'язок з "Genres")
+
+e) Таблиця "users":
+
+    user_id (INT, автоматично зростаючий PRIMARY KEY)
+    username (VARCHAR)
+    email (VARCHAR)
+
+f) Таблиця "borrowed_books":
+
+    borrow_id (INT, автоматично зростаючий PRIMARY KEY)
+    book_id (INT, FOREIGN KEY зв'язок з "Books")
+    user_id (INT, FOREIGN KEY зв'язок з "Users")
+    borrow_date (DATE)
+    return_date (DATE)
+
+CODE:
+
+CREATE DATABASE LibraryManagement;
+USE LibraryManagement;
+CREATE TABLE authors(
+    author_id INT AUTO_INCREMENT PRIMARY KEY,
+    author_name VARCHAR(45)
+    );
+    
+CREATE TABLE genres(
+    genre_id INT AUTO_INCREMENT PRIMARY KEY,
+    genre_name VARCHAR(45)
+    );
+
+CREATE TABLE books(
+    book_id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(45),
+    publication_year VARCHAR(4),
+    author_id INT, 
+    FOREIGN KEY (author_id) REFERENCES authors (author_id),
+    genre_id INT,
+    FOREIGN KEY (genre_id) REFERENCES genres (genre_id)
+    );
+
+CREATE TABLE users(
+    user_id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(45),
+    email VARCHAR(45)
+    );
+
+CREATE TABLE borrowed_books(
+    borrow_id INT AUTO_INCREMENT PRIMARY KEY,
+    book_id INT, 
+    FOREIGN KEY (book_id) REFERENCES books (book_id),
+    user_id INT, 
+    FOREIGN KEY (user_id) REFERENCES users (user_id),
+    borrow_date DATE,
+    return_date DATE
+    );
+    

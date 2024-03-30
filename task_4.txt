@@ -1,0 +1,154 @@
+4. Виконайте запити, перелічені нижче.
+
+    4.1. Визначте, скільки рядків ви отримали (за допомогою оператора COUNT).
+
+Відповідь: 518 рядків
+
+USE hw_3;
+SELECT
+COUNT(*) AS row_count
+FROM orders
+INNER JOIN order_details ON orders.id = order_details.order_id
+INNER JOIN products ON order_details.product_id = products.id
+INNER JOIN categories ON products.category_id = categories.id
+INNER JOIN suppliers ON products.supplier_id = suppliers.id
+INNER JOIN customers ON orders.customer_id = customers.id
+INNER JOIN shippers ON orders.shipper_id = shippers.id
+INNER JOIN employees ON orders.employee_id = employees.employee_id
+;
+
+    4.2. Змініть декілька операторів INNER на LEFT чи RIGHT. 
+    Визначте, що відбувається з кількістю рядків. 
+    Чому? Напишіть відповідь у текстовому файлі.
+
+Відповідь:
+в моєму випадку змін у кількості рядків не відбулося оскільки в таблиця order_details включає всі order_id
+
+    4.3. Оберіть тільки ті рядки, де employee_id > 3 та ≤ 10.
+
+Відповідь: 317 рядків
+
+SELECT
+COUNT(*) AS row_count
+FROM orders
+INNER JOIN order_details ON orders.id = order_details.order_id
+INNER JOIN products ON order_details.product_id = products.id
+INNER JOIN categories ON products.category_id = categories.id
+INNER JOIN suppliers ON products.supplier_id = suppliers.id
+INNER JOIN customers ON orders.customer_id = customers.id
+INNER JOIN shippers ON orders.shipper_id = shippers.id
+INNER JOIN employees ON orders.employee_id = employees.employee_id
+WHERE employees.employee_id > 3 AND  employees.employee_id <= 10;
+
+
+    4.4. Згрупуйте за іменем категорії, порахуйте кількість рядків у групі, 
+    середню кількість товару (кількість товару знаходиться в order_details.quantity)
+
+Відповідь:
+Beverages	93	24.6129
+Dairy Products	100	26.0100
+Grains/Cereals	42	21.7143
+Seafood	67	21.5672
+Confections	84	25.1190
+Meat/Poultry	50	25.7600
+Condiments	49	28.2245
+Produce	33	21.6667
+
+SELECT
+categories.name,
+COUNT(*) AS row_count,
+AVG(order_details.quantity) as avg_product_quantity
+FROM orders
+INNER JOIN order_details ON orders.id = order_details.order_id
+INNER JOIN products ON order_details.product_id = products.id
+INNER JOIN categories ON products.category_id = categories.id
+INNER JOIN suppliers ON products.supplier_id = suppliers.id
+INNER JOIN customers ON orders.customer_id = customers.id
+INNER JOIN shippers ON orders.shipper_id = shippers.id
+INNER JOIN employees ON orders.employee_id = employees.employee_id
+GROUP BY categories.name;
+
+
+    4.5. Відфільтруйте рядки, де середня кількість товару більша за 21.
+
+Відповідь:
+Beverages	93	24.6129
+Dairy Products	100	26.0100
+Grains/Cereals	42	21.7143
+Seafood	67	21.5672
+Confections	84	25.1190
+Meat/Poultry	50	25.7600
+Condiments	49	28.2245
+Produce	33	21.6667
+
+SELECT
+categories.name,
+COUNT(*) AS row_count,
+AVG(order_details.quantity) as avg_product_quantity
+FROM orders
+INNER JOIN order_details ON orders.id = order_details.order_id
+INNER JOIN products ON order_details.product_id = products.id
+INNER JOIN categories ON products.category_id = categories.id
+INNER JOIN suppliers ON products.supplier_id = suppliers.id
+INNER JOIN customers ON orders.customer_id = customers.id
+INNER JOIN shippers ON orders.shipper_id = shippers.id
+INNER JOIN employees ON orders.employee_id = employees.employee_id
+GROUP BY categories.name
+HAVING avg_product_quantity > 21;
+
+
+    4.6. Відсортуйте рядки за спаданням кількості рядків.
+
+Відповідь:
+
+Dairy Products	100	26.0100
+Beverages	93	24.6129
+Confections	84	25.1190
+Seafood	67	21.5672
+Meat/Poultry	50	25.7600
+Condiments	49	28.2245
+Grains/Cereals	42	21.7143
+Produce	33	21.6667
+
+SELECT
+categories.name,
+COUNT(*) AS row_count,
+AVG(order_details.quantity) as avg_product_quantity
+FROM orders
+INNER JOIN order_details ON orders.id = order_details.order_id
+INNER JOIN products ON order_details.product_id = products.id
+INNER JOIN categories ON products.category_id = categories.id
+INNER JOIN suppliers ON products.supplier_id = suppliers.id
+INNER JOIN customers ON orders.customer_id = customers.id
+INNER JOIN shippers ON orders.shipper_id = shippers.id
+INNER JOIN employees ON orders.employee_id = employees.employee_id
+GROUP BY categories.name
+HAVING avg_product_quantity > 21
+ORDER BY row_count DESC;
+
+    4.7. Виведіть на екран (оберіть) чотири рядки з пропущеним першим рядком.
+
+Відповідь:
+
+Beverages	93	24.6129
+Confections	84	25.1190
+Seafood	67	21.5672
+Meat/Poultry	50	25.7600
+
+SELECT
+categories.name,
+COUNT(*) AS row_count,
+AVG(order_details.quantity) as avg_product_quantity
+FROM orders
+INNER JOIN order_details ON orders.id = order_details.order_id
+INNER JOIN products ON order_details.product_id = products.id
+INNER JOIN categories ON products.category_id = categories.id
+INNER JOIN suppliers ON products.supplier_id = suppliers.id
+INNER JOIN customers ON orders.customer_id = customers.id
+INNER JOIN shippers ON orders.shipper_id = shippers.id
+INNER JOIN employees ON orders.employee_id = employees.employee_id
+GROUP BY categories.name
+HAVING avg_product_quantity > 21
+ORDER BY row_count DESC
+LIMIT 4
+OFFSET 1;
